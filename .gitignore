@@ -1,0 +1,10 @@
+# Solution to ignore various hidden files from stackoverflow
+# https://stackoverflow.com/questions/8021441/how-to-ignore-all-hidden-directories-files-recursively-in-a-git-repository
+
+/**/.*  # ignore all dotted files
+/**/.*/ # ignore all dotted folders
+Task-MemManager-*   
+/Task-MemManager-*/
+/_Inline/
+/.vscode/
+!/.gitignore  # except `gitignore` :)
