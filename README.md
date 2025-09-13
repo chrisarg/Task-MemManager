@@ -4,7 +4,7 @@ Task::MemManager - A memory allocated and manager for low level code in Perl.
 
 # VERSION
 
-version 0.04
+version 0.05
 
 # SYNOPSIS
 
@@ -37,53 +37,55 @@ The default allocator is PerlAlloc, which uses Perl's string functions to alloca
 # METHODS
 
 ## new
-   Usage      : my $buffer = Task::MemManager->consume($buffer,10,1,
-                {allocator => 'PerlAlloc'});
-  Purpose     : Allocates a buffer using a specified allocator.
-  Returns     : A reference to the buffer.
-  Parameters  : 
-    - $num\_of\_items: Number of items in the buffer.
-    - $size\_of\_each\_item: Size of each item in the buffer.
-    - \\%opts: Reference to a hash of options (with defaults under comments):
-      - allocator: Name of the allocator to use.
-      - delayed\_gc: Should garbage collection be delayed?
-      - init\_value: Value to initialize the buffer with (byte, non UTF!).
-      - death\_stub: Function to call upon object destruction (if any).
-      Additional options may be specified and the entire hash reference
-      will be passed to the malloc function of the allocator.
-  Throws      : Croaks if the buffer allocation fails.
-  Comments    : Default allocator is PerlAlloc, which uses Perl's string functions.
-                Default init\_value is undef ('zero' zeroes out memory, 
-                any other byte value will initialize memory with that value).
-                Default delayed\_gc is 0 (garbage collection is immediate).
+
+     Usage      : my $buffer = Task::MemManager->consume($buffer,10,1,
+                  {allocator => 'PerlAlloc'});
+    Purpose     : Allocates a buffer using a specified allocator.
+    Returns     : A reference to the buffer.
+    Parameters  : 
+      - $num_of_items: Number of items in the buffer.
+      - $size_of_each_item: Size of each item in the buffer.
+      - \%opts: Reference to a hash of options (with defaults under comments):
+        - allocator: Name of the allocator to use.
+        - delayed_gc: Should garbage collection be delayed?
+        - init_value: Value to initialize the buffer with (byte, non UTF!).
+        - death_stub: Function to call upon object destruction (if any).
+        Additional options may be specified and the entire hash reference
+        will be passed to the malloc function of the allocator.
+    Throws      : Croaks if the buffer allocation fails.
+    Comments    : Default allocator is PerlAlloc, which uses Perl's string functions.
+                  Default init_value is undef ('zero' zeroes out memory, 
+                  any other byte value will initialize memory with that value).
+                  Default delayed_gc is 0 (garbage collection is immediate).
 
 ## consume
-  Usage       : my $buffer = Task::MemManager->consume($buffer,10,1,
-                {allocator => 'PerlAlloc'});
-  Purpose     : Consumers a buffer created with the specified allocator
-  Returns     : A reference to the buffer
-  Parameters  : $external\_buffer\_ref - Reference to the external buffer
-                $num\_of\_items     - Number of items in the buffer
-                $size\_of\_each\_item - Size of each item in the buffer
-                \\$opts          - Reference to a hash of options. 
-                The ones that control the constructor are the following:
-                allocator      - Name of the allocator to use
-                delayed\_gc     - Should garbage collection be delayed ?
-                                  If it evaluates to non-false, it'll delay GC
-                init\_value     - Value to initialize the buffer with (ignored)
-                death\_stub     - Function to call upon object destruction
-                                  it will receive the object's properties and 
-                                  identifier as a hash reference (if defined)
-                Additional options may be presented and the entire set of 
-                options will be passed to the malloc function of the 
-                allocator. 
-  Throws      : Croaks if the buffer allocation fails, or if the allocator
-                does not provide a consume function
-  Comments    : Default allocator is PerlAlloc, which uses Perl's string
-                functions,
-                Default init\_value is undef ('zero' zeroes out memory, any
-                  byte value will initialize memory with that value)
-                Default delayed\_gc is 1 (garbage collection is delayed)
+
+    Usage       : my $buffer = Task::MemManager->consume($buffer,10,1,
+                  {allocator => 'PerlAlloc'});
+    Purpose     : Consumers a buffer created with the specified allocator
+    Returns     : A reference to the buffer
+    Parameters  : $external_buffer_ref - Reference to the external buffer
+                  $num_of_items     - Number of items in the buffer
+                  $size_of_each_item - Size of each item in the buffer
+                  \$opts          - Reference to a hash of options. 
+                  The ones that control the constructor are the following:
+                  allocator      - Name of the allocator to use
+                  delayed_gc     - Should garbage collection be delayed ?
+                                    If it evaluates to non-false, it'll delay GC
+                  init_value     - Value to initialize the buffer with (ignored)
+                  death_stub     - Function to call upon object destruction
+                                    it will receive the object's properties and 
+                                    identifier as a hash reference (if defined)
+                  Additional options may be presented and the entire set of 
+                  options will be passed to the malloc function of the 
+                  allocator. 
+    Throws      : Croaks if the buffer allocation fails, or if the allocator
+                  does not provide a consume function
+    Comments    : Default allocator is PerlAlloc, which uses Perl's string
+                  functions,
+                  Default init_value is undef ('zero' zeroes out memory, any
+                    byte value will initialize memory with that value)
+                  Default delayed_gc is 1 (garbage collection is delayed)
 
 ## extract\_buffer\_region
 
