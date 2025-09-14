@@ -111,9 +111,10 @@ sub new {
     my $init_value = $opts_ref->{init_value};
     $opts_ref->{delayed_gc} //= 0;
 
-    unless ( ref($self) ) {
+
+    if ( ref($self) ) {
         if (DEBUG) {
-            carp "Cannot call create_view as class method.\n";
+            carp "Cannot call new on a (blessed) reference.\n";
         }
         return undef;
     }
@@ -411,7 +412,7 @@ The default allocator is PerlAlloc, which uses Perl's string functions to alloca
 
 =head2 new
 
-   Usage      : my $buffer = Task::MemManager->consume($buffer,10,1,
+  Usage      : my $buffer = Task::MemManager->consume($buffer,10,1,
                 {allocator => 'PerlAlloc'});
   Purpose     : Allocates a buffer using a specified allocator.
   Returns     : A reference to the buffer.

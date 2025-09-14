@@ -4,7 +4,7 @@ Task::MemManager - A memory allocated and manager for low level code in Perl.
 
 # VERSION
 
-version 0.06
+version 0.07
 
 # SYNOPSIS
 
@@ -38,7 +38,7 @@ The default allocator is PerlAlloc, which uses Perl's string functions to alloca
 
 ## new
 
-     Usage      : my $buffer = Task::MemManager->consume($buffer,10,1,
+    Usage      : my $buffer = Task::MemManager->consume($buffer,10,1,
                   {allocator => 'PerlAlloc'});
     Purpose     : Allocates a buffer using a specified allocator.
     Returns     : A reference to the buffer.

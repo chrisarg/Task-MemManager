@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.07      2025-09-14 15:17:53-06:00 America/Denver
+- Fixed subtle bug in the new method that was expecting a reference to the class
 0.06      2025-09-14 14:29:14-06:00 America/Denver
 - Moved the generation of the initial value as a byte into the new method
 - Fixed importing of View and GPU modules unless explicitly requested
