@@ -4,7 +4,7 @@ Task::MemManager - A memory allocated and manager for low level code in Perl.
 
 # VERSION
 
-version 0.05
+version 0.06
 
 # SYNOPSIS
 
@@ -52,7 +52,9 @@ The default allocator is PerlAlloc, which uses Perl's string functions to alloca
         - death_stub: Function to call upon object destruction (if any).
         Additional options may be specified and the entire hash reference
         will be passed to the malloc function of the allocator.
-    Throws      : Croaks if the buffer allocation fails.
+    Throws      : Dies if the buffer allocation fails, or if the allocator
+                  does not exist, or if one attempts to allocate a region that
+                  overlaps with an existing buffer.
     Comments    : Default allocator is PerlAlloc, which uses Perl's string functions.
                   Default init_value is undef ('zero' zeroes out memory, 
                   any other byte value will initialize memory with that value).
@@ -79,8 +81,9 @@ The default allocator is PerlAlloc, which uses Perl's string functions to alloca
                   Additional options may be presented and the entire set of 
                   options will be passed to the malloc function of the 
                   allocator. 
-    Throws      : Croaks if the buffer allocation fails, or if the allocator
-                  does not provide a consume function
+    Throws      : Dies if the buffer allocation fails, or if the allocator
+                  does not provide a consume function, or if one attempts to
+                  consume a region that overlaps with an existing buffer.
     Comments    : Default allocator is PerlAlloc, which uses Perl's string
                   functions,
                   Default init_value is undef ('zero' zeroes out memory, any
@@ -357,7 +360,7 @@ We will then create 2 bonafide Perl scalars, and then we will consume them
 using Task::MemManager::PerlAlloc. We will then try to consume one of the
 two Perl scalars using the memory address of the respective buffer 
 using Task::MemManager::CMalloc to show the detection of overlapping memory 
-regions, which causes the program to croak. Ordinarly, one would anticipate 
+regions, which causes the program to die. Ordinarly, one would anticipate 
 problems during the program shutdown as the DESTROY function is called to deal 
 with the Task::MemManager objects. This is prevented because we track the 
 regions that are overlapping and do not free them in the destructor.
@@ -424,14 +427,21 @@ This example is entirely self-contained.
 
 # DIAGNOSTICS
 
-There are no diagnostics that one can use. The module will croak if the
+There are no diagnostics that one can use. The module will die if the
 allocation fails, so you don't have to worry about error handling. 
+There are some survivable errors, e.g. calling the constructor as a class
+method, in which case the method will return undef. 
+If you set up the environment variable DEBUG to a non-zero value, then
+a number of sanity checks will be performed, and the module will die
+with an (informative message ?) if something is wrong.
 
 # DEPENDENCIES
 
 The module depends on the `Inline::C` module to access the memory buffer 
-of the Perl scalar using the PerlAPI. In addition it depends implicitly
-on all the dependencies of the memory allocators it uses
+of the Perl scalar using the PerlAPI.
+Allocators are identified and loaded automatically from the
+Task::MemManager namespace using the `Module::Find` and `Module::Runtime` 
+modules (so you can count them among the dependencies too).
 
 # TODO
 
