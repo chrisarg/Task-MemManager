@@ -28,6 +28,7 @@ BEGIN {
 Inline->init()
   ; ## prevents warning "One or more DATA sections were not processed by Inline"
 
+
 ###############################################################################
 # Usage       : Task::MemManager::PerlAlloc::free($buffer);
 # Purpose     : Frees the buffer allocated by malloc
@@ -88,7 +89,7 @@ sub malloc {
 # Task::MemManager::PerlAlloc::consume($external_buffer_ref, $length);
 # Purpose     : Consumes an external buffer, stored in a scalar variable
 #               (provided as a reference to simulate pass-by-reference)
-# Returns     : A reference to the external buffer
+# Returns     : A reference to a (copy of the) external buffer
 # Parameters  : $external_buffer - A reference to the external buffer
 #               $length          - The length of the buffer to consume. If the
 #                                  length is greater than the actual length of
@@ -96,7 +97,7 @@ sub malloc {
 #                                  If the length is less than the actual length
 #                                  of the buffer, only the specified length
 #                                  will be consumed.
-# Throws      : dies if the external buffer is not defined, or if it is not a
+# Throws      : Dies if the external buffer is not defined, or if it is not a
 #               scalar reference or if the length of the external buffer is
 #               non-positive.
 # Comments    : The Perl buffer is *copied* into a new scalar variable, so the
@@ -115,7 +116,6 @@ sub consume {
 
     my $current_length = length($$external_buffer_ref);
     if (DEBUG) {
-        die "External buffer is read-only" if readonly($external_buffer_ref);
         die "Length of external buffer is not positive"
           unless $current_length > 0;
     }
@@ -167,6 +167,13 @@ Frees the buffer allocated by C<malloc>.
 =item * C<get_buffer_address($buffer)>
 
 Returns the memory address of the buffer as a Perl scalar.
+
+=item * C<consume($external_buffer_ref, $length)>
+
+Consumes an external buffer, stored in a scalar variable (provided as a
+reference to simulate pass-by-reference). The external buffer is copied into a
+new scalar variable, so the original buffer can be freed or go out of scope
+without affecting the buffer managed by C<Task::MemManager>.
 
 =back
 
