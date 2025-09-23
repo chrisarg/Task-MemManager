@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.08      2025-09-22 21:27:05-06:00 America/Denver
 - Expanded documentation to include details on error handling e.g. when the
 allocator will return undef
 - Allows options when loading the package to specify which allocators to use

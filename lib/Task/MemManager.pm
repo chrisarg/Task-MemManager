@@ -140,10 +140,8 @@ sub import {
 }
 
 # Ensure import runs even if module is used without options
-CHECK {
-    unless ($import_was_called) {
-        __PACKAGE__->import();    # Call with no arguments (uses defaults)
-    }
+unless ($import_was_called) {
+    __PACKAGE__->import();    # Call with no arguments (uses defaults)
 }
 
 ###############################################################################
@@ -257,7 +255,7 @@ $consume_or_allocate_private_func = sub {
         $func_args_ref )
       = @_;
 
-    # undef if the number of items or the number of bytes per item is not defined
+   # undef if the number of items or the number of bytes per item is not defined
     unless ( defined $num_of_items and defined $size_of_each_item ) {
         warn "Number of items and size of each item must be defined";
         return undef;

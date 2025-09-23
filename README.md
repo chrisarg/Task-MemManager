@@ -4,7 +4,7 @@ Task::MemManager - A memory allocated and manager for low level code in Perl.
 
 # VERSION
 
-version 0.07
+version 0.08
 
 # SYNOPSIS
 
@@ -33,6 +33,21 @@ that allocate, free, and return the address of a buffer respectively.
 Packages that do not implement these functions will not be used for memory allocation purposes.
 e.g. they may implement other functionalities for working with memory buffers.
 The default allocator is PerlAlloc, which uses Perl's string functions to allocate memory.
+The package may be loaded with options to specify different allocators,
+device mappings and views. For example:
+
+    use Task::MemManager Allocator => ['PerlAlloc'];  # only PerlAlloc
+    use Task::MemManager;                             # only PerlAlloc
+    use Task::MemManager ();                          # only PerlAlloc
+    use Task::MemManager Allocator => ['MyAlloc'];    # MyAlloc and PerlAlloc
+
+    use Task::MemManager Allocator => ['MyAlloc','PerlAlloc']; # MyAlloc and PerlAlloc
+
+    use Task::MemManager Device => ['NVIDIA_GPU'];    # NVIDIA_GPU device mapping
+
+    use Task::MemManager View => ['PDL'];             # PDL view of buffers
+
+One can combine options for Allocator, Device, and View as needed.
 
 # METHODS
 
@@ -59,6 +74,9 @@ The default allocator is PerlAlloc, which uses Perl's string functions to alloca
                   Default init_value is undef ('zero' zeroes out memory, 
                   any other byte value will initialize memory with that value).
                   Default delayed_gc is 0 (garbage collection is immediate).
+                  Survivable errors (e.g. calling as a class method, or forgetting
+                  to define the number of items or the size of each item) will
+                  return undef.
 
 ## consume
 
@@ -87,8 +105,11 @@ The default allocator is PerlAlloc, which uses Perl's string functions to alloca
     Comments    : Default allocator is PerlAlloc, which uses Perl's string
                   functions,
                   Default init_value is undef ('zero' zeroes out memory, any
-                    byte value will initialize memory with that value)
+                  byte value will initialize memory with that value)
                   Default delayed_gc is 1 (garbage collection is delayed)
+                  See the comments of each allocator for type constraints of
+                  the external buffer (e.g. if CMalloc is used, then the buffer
+                  must be a reference to a scalar containing an integer).
 
 ## extract\_buffer\_region
 
@@ -158,7 +179,7 @@ The examples are best run sequentially in a single Perl script.
 
 ## Example 1: Allocating buffers and killing them 
 
-    use Task::MemManager;
+    use Task::MemManager Allocator => ['CMalloc'];
     ## uses the default allocator PerlAlloc
     my $memdeath = Task::MemManager->new(
         40, 1,
@@ -310,7 +331,7 @@ In this example we will create two buffers, one without and one with delayed
 garbage collection and will track when they die relative to the end of the
 script. This example is entirely self-contained.
 
-    use Task::MemManager;
+    use Task::MemManager Allocator => ['CMalloc','PerlAlloc'];
     use strict;
     use warnings;
 
