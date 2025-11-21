@@ -139,10 +139,6 @@ sub import {
     }
 }
 
-# Ensure import runs even if module is used without options
-unless ($import_was_called) {
-    __PACKAGE__->import();    # Call with no arguments (uses defaults)
-}
 
 ###############################################################################
 # Usage       : my $buffer = Task::MemManager->new(10, 1, {allocator =>
@@ -346,6 +342,7 @@ sub DESTROY {
     delete $size_of_element{$identifier};
     delete $num_of_elements{$identifier};
     delete $creation_opts{$identifier};
+    delete $memory_region{$identifier};
 }
 ###############################################################################
 # Usage       : Task::MemManager->extract_buffer_region(pos_start, pos_end);
@@ -478,7 +475,7 @@ device mappings and views. For example:
 
   use Task::MemManager Allocator => ['PerlAlloc'];  # only PerlAlloc
   use Task::MemManager;                             # only PerlAlloc
-  use Task::MemManager ();                          # only PerlAlloc
+  use Task::MemManager ();                          # unusable
   use Task::MemManager Allocator => ['MyAlloc'];    # MyAlloc and PerlAlloc
 
   use Task::MemManager Allocator => ['MyAlloc','PerlAlloc']; # MyAlloc and PerlAlloc

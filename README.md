@@ -4,7 +4,7 @@ Task::MemManager - A memory allocated and manager for low level code in Perl.
 
 # VERSION
 
-version 0.08
+version 0.09
 
 # SYNOPSIS
 
@@ -38,7 +38,7 @@ device mappings and views. For example:
 
     use Task::MemManager Allocator => ['PerlAlloc'];  # only PerlAlloc
     use Task::MemManager;                             # only PerlAlloc
-    use Task::MemManager ();                          # only PerlAlloc
+    use Task::MemManager ();                          # unusable
     use Task::MemManager Allocator => ['MyAlloc'];    # MyAlloc and PerlAlloc
 
     use Task::MemManager Allocator => ['MyAlloc','PerlAlloc']; # MyAlloc and PerlAlloc
